@@ -1,46 +1,65 @@
-'use strict';
-
+var utils = require('../src/lib/utils.js'),
+assert = require('assert');
 var expect = require('chai').expect;
-var numFormatter = require('../index');
 
-describe('#numFormatter', function() {
-    it('should convert single digits', function() {
-        var result = numFormatter(1);
-        expect(result).to.equal('1');
+describe('#utils', function() {
+    it('admin - admin', function() {
+        var result = utils.compare('admin', 'admin');
+        expect(result).to.equal(true);
     });
 
-    it('should convert double digits', function() {
-        var result = numFormatter(12);
-        expect(result).to.equal('12');
+    it('admin - [\'admin\']', function() {
+        var result = utils.compare('admin', ['admin']);
+        expect(result).to.equal(true);
     });
-
-    it('should convert triple digits', function() {
-        var result = numFormatter(123);
-        expect(result).to.equal('123');
+    it('[\'admin\'] - [\'admin\']', function() {
+        var result = utils.compare(['admin'], ['admin']);
+        expect(result).to.equal(true);
     });
-
-    it('should convert 4 digits', function() {
-        var result = numFormatter(1234);
-        expect(result).to.equal('1,234');
+    it('admin - [\'admin\', \'manager\']', function() {
+        var result = utils.compare('admin', ['admin', 'manager']);
+        expect(result).to.equal(true);
     });
-
-    it('should convert 5 digits', function() {
-        var result = numFormatter(12345);
-        expect(result).to.equal('12,345');
+    it('[\'admin\'] - [\'admin\', \'manager\']', function() {
+        var result = utils.compare(['admin'], ['admin', 'manager']);
+        expect(result).to.equal(true);
     });
-
-    it('should convert 6 digits', function() {
-        var result = numFormatter(123456);
-        expect(result).to.equal('123,456');
+    it('0 - 1', function() {
+        var result = utils.compare('0', '1');
+        expect(result).to.equal(false);
     });
-
-    it('should convert 7 digits', function() {
-        var result = numFormatter(1234567);
-        expect(result).to.equal('1,234,567');
+    it('0 - [\'0\, \'1\']', function() {
+        var result = utils.compare('0', ['0', '1']);
+        expect(result).to.equal(true);
     });
-
-    it('should convert 8 digits', function() {
-        var result = numFormatter(12345678);
-        expect(result).to.equal('12,345,678');
+    it('[\'0\'] - [\'0\, \'1\']', function() {
+        var result = utils.compare(['0'], ['0', '1']);
+        expect(result).to.equal(true);
     });
 });
+/*
+try {
+    
+    // compare
+    var result = utils.compare('admin', 'admin');
+    expect(result).to.equal(true);
+    strictEqual(utils.compare('0', '1'), false);
+    strictEqual(utils.compare('0', ['0', '1']), true);
+    strictEqual(utils.compare(['0'], ['0', '1']), true);
+    strictEqual(utils.compare(['0', '1'], ['0', '1']), true);
+    strictEqual(utils.compare(0, ['0', '1']), false);
+    strictEqual(utils.compare(0, [0, '1']), true);
+    strictEqual(utils.compare(1, [0, 1]), true);
+    strictEqual(utils.compare([1], [0, 1]), true);
+    strictEqual(utils.compare([0, 1], [0, 1]), true);
+    strictEqual(utils.compare({some: 'field'}, [0, 1]), false);
+    strictEqual(utils.compare({some: 'field'}, {some: 'object'}), false);
+    strictEqual(utils.compare({some: 'field'}, {some: 'field'}), true);
+    strictEqual(utils.compare({some: 'field'}, {some: 'field', another: 'one'}), true);
+    strictEqual(utils.compare({some: 'field'}, {some: 'object', another: 'one'}), false);
+}
+catch (err) {
+    // console.log('Error on line ' + i);
+}
+
+})();*/
